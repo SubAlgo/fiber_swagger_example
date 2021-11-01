@@ -1,0 +1,399 @@
+{
+    "schemes": [
+        "https",
+        "http"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "API user management Server by Fiber | Doc by Swagger.",
+        "title": "User API by Fiber and Swagger",
+        "contact": {
+            "name": "admin",
+            "url": "http://subalgo.com/support",
+            "email": "admin@subalgo.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "paths": {
+        "/healthcheck": {
+            "get": {
+                "description": "get the status of server.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "root"
+                ],
+                "summary": "Show the status of server.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "List users from the store",
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Users"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "-",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Create new user.",
+                "parameters": [
+                    {
+                        "description": "Customer data to be updated",
+                        "name": "User",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UserForCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "BadRequest",
+                        "schema": {
+                            "$ref": "#/definitions/model.APIError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error!!",
+                        "schema": {
+                            "$ref": "#/definitions/model.APIError"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/:id": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "-",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "update user data.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id of user to be updated",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "User Data",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UserForUpdate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "We need ID!!",
+                        "schema": {
+                            "$ref": "#/definitions/model.APIError"
+                        }
+                    },
+                    "404": {
+                        "description": "Can not find ID",
+                        "schema": {
+                            "$ref": "#/definitions/model.APIError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error!!",
+                        "schema": {
+                            "$ref": "#/definitions/model.APIError"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Read user from the store",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.User"
+                        }
+                    },
+                    "400": {
+                        "description": "We need ID!!",
+                        "schema": {
+                            "$ref": "#/definitions/model.APIError"
+                        }
+                    },
+                    "404": {
+                        "description": "Can not find ID",
+                        "schema": {
+                            "$ref": "#/definitions/model.APIError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.APIError": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "errorCode": {
+                    "type": "integer"
+                },
+                "errorMessage": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Response Code",
+                    "type": "integer"
+                },
+                "status": {
+                    "description": "Response Status",
+                    "type": "string"
+                }
+            }
+        },
+        "model.User": {
+            "type": "object",
+            "required": [
+                "email",
+                "firstname",
+                "lastname",
+                "username"
+            ],
+            "properties": {
+                "email": {
+                    "description": "User E-mail",
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "abc@gmail.com"
+                },
+                "firstname": {
+                    "description": "User Firstname",
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "Firstname"
+                },
+                "gender": {
+                    "description": "User Gender",
+                    "type": "string",
+                    "enum": [
+                        "male",
+                        "female"
+                    ],
+                    "example": "male"
+                },
+                "id": {
+                    "description": "User ID",
+                    "type": "integer",
+                    "example": 1
+                },
+                "lastname": {
+                    "description": "User Lastname",
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "Lastname"
+                },
+                "username": {
+                    "description": "user Username",
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "username"
+                }
+            }
+        },
+        "model.UserForCreate": {
+            "type": "object",
+            "required": [
+                "email",
+                "firstname",
+                "lastname",
+                "username"
+            ],
+            "properties": {
+                "email": {
+                    "description": "User E-mail",
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "abc@gmail.com"
+                },
+                "firstname": {
+                    "description": "User Firstname",
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "Firstname"
+                },
+                "gender": {
+                    "description": "User Gender",
+                    "type": "string",
+                    "enum": [
+                        "male",
+                        "female"
+                    ],
+                    "example": "male"
+                },
+                "lastname": {
+                    "description": "User Lastname",
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "Lastname"
+                },
+                "username": {
+                    "description": "user Username",
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "username"
+                }
+            }
+        },
+        "model.UserForUpdate": {
+            "type": "object",
+            "required": [
+                "email",
+                "firstname",
+                "lastname"
+            ],
+            "properties": {
+                "email": {
+                    "description": "User E-mail",
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "abc@gmail.com"
+                },
+                "firstname": {
+                    "description": "User Firstname",
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "Firstname"
+                },
+                "gender": {
+                    "description": "User Gender",
+                    "type": "string",
+                    "enum": [
+                        "male",
+                        "female"
+                    ],
+                    "example": "male"
+                },
+                "lastname": {
+                    "description": "User Lastname",
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "Lastname"
+                }
+            }
+        },
+        "model.Users": {
+            "type": "object",
+            "properties": {
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.User"
+                    }
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

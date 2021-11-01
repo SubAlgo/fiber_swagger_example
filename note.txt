@@ -1,0 +1,21 @@
+1. General API Info
+- ชื่อ API: User API
+- version: 1.0
+- คำอธิบาย: API จัดข้อมูล User
+- team service: SubAlgo
+- contact name: admin
+- contact url: http://admin@subalgo.com/support
+- contact email: admin@subalgo.com
+- license name: Apache 2.0
+- license url: http://www.apache.org/licenses/LICENSE-2.0.html
+- schemes: https http
+- ข้อกำหนด security api: ApiKeyAuth in header
+
+2. HealthCheck API Info
+- ชื่อ API operation: Heath Check
+- description: Health checking for the service.
+- id: HealthCheckController
+- data type ของการตอบกลับ: plain
+- response: [code: 200, data_type: string, comment: "OK"]
+- router Path: /healthcheck
+- method: GET

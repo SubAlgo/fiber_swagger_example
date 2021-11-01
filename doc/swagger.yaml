@@ -1,0 +1,279 @@
+definitions:
+  model.APIError:
+    properties:
+      createdAt:
+        type: string
+      errorCode:
+        type: integer
+      errorMessage:
+        type: string
+    type: object
+  model.Response:
+    properties:
+      code:
+        description: Response Code
+        type: integer
+      status:
+        description: Response Status
+        type: string
+    type: object
+  model.User:
+    properties:
+      email:
+        description: User E-mail
+        example: abc@gmail.com
+        maxLength: 255
+        type: string
+      firstname:
+        description: User Firstname
+        example: Firstname
+        maxLength: 255
+        type: string
+      gender:
+        description: User Gender
+        enum:
+        - male
+        - female
+        example: male
+        type: string
+      id:
+        description: User ID
+        example: 1
+        type: integer
+      lastname:
+        description: User Lastname
+        example: Lastname
+        maxLength: 255
+        type: string
+      username:
+        description: user Username
+        example: username
+        maxLength: 255
+        type: string
+    required:
+    - email
+    - firstname
+    - lastname
+    - username
+    type: object
+  model.UserForCreate:
+    properties:
+      email:
+        description: User E-mail
+        example: abc@gmail.com
+        maxLength: 255
+        type: string
+      firstname:
+        description: User Firstname
+        example: Firstname
+        maxLength: 255
+        type: string
+      gender:
+        description: User Gender
+        enum:
+        - male
+        - female
+        example: male
+        type: string
+      lastname:
+        description: User Lastname
+        example: Lastname
+        maxLength: 255
+        type: string
+      username:
+        description: user Username
+        example: username
+        maxLength: 255
+        type: string
+    required:
+    - email
+    - firstname
+    - lastname
+    - username
+    type: object
+  model.UserForUpdate:
+    properties:
+      email:
+        description: User E-mail
+        example: abc@gmail.com
+        maxLength: 255
+        type: string
+      firstname:
+        description: User Firstname
+        example: Firstname
+        maxLength: 255
+        type: string
+      gender:
+        description: User Gender
+        enum:
+        - male
+        - female
+        example: male
+        type: string
+      lastname:
+        description: User Lastname
+        example: Lastname
+        maxLength: 255
+        type: string
+    required:
+    - email
+    - firstname
+    - lastname
+    type: object
+  model.Users:
+    properties:
+      users:
+        items:
+          $ref: '#/definitions/model.User'
+        type: array
+    type: object
+info:
+  contact:
+    email: admin@subalgo.com
+    name: admin
+    url: http://subalgo.com/support
+  description: API user management Server by Fiber | Doc by Swagger.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: User API by Fiber and Swagger
+  version: "1.0"
+paths:
+  /healthcheck:
+    get:
+      consumes:
+      - '*/*'
+      description: get the status of server.
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Show the status of server.
+      tags:
+      - root
+  /user:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              $ref: '#/definitions/model.Users'
+            type: array
+      summary: List users from the store
+      tags:
+      - user
+    post:
+      consumes:
+      - application/json
+      description: '-'
+      parameters:
+      - description: Customer data to be updated
+        in: body
+        name: User
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserForCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: BadRequest
+          schema:
+            $ref: '#/definitions/model.APIError'
+        "500":
+          description: Internal server error!!
+          schema:
+            $ref: '#/definitions/model.APIError'
+      summary: Create new user.
+      tags:
+      - user
+  /user/:id:
+    put:
+      consumes:
+      - application/json
+      description: '-'
+      parameters:
+      - description: id of user to be updated
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User Data
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserForUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: We need ID!!
+          schema:
+            $ref: '#/definitions/model.APIError'
+        "404":
+          description: Can not find ID
+          schema:
+            $ref: '#/definitions/model.APIError'
+        "500":
+          description: Internal server error!!
+          schema:
+            $ref: '#/definitions/model.APIError'
+      security:
+      - ApiKeyAuth: []
+      summary: update user data.
+      tags:
+      - user
+  /user/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: We need ID!!
+          schema:
+            $ref: '#/definitions/model.APIError'
+        "404":
+          description: Can not find ID
+          schema:
+            $ref: '#/definitions/model.APIError'
+      summary: Read user from the store
+      tags:
+      - user
+schemes:
+- https
+- http
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
